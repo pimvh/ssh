@@ -1,0 +1,4 @@
+{{ ansible_managed | comment }}
+{% for key in revoked_keys %}
+{{ key }}
+{% endfor %}

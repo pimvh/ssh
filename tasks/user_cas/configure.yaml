@@ -1,0 +1,42 @@
+---
+- name: Move TrustedUserCAKeys public key to host
+  ansible.builtin.template:
+    src: ssh_trusted_user_ca_keys.j2
+    dest: "{{ ssh_trusted_user_ca_keys_file }}"
+    mode: u=rw,g=r,o=r
+    owner: root
+    group: root
+  become: true
+  # ignore errors in check mode in case of absent CAs
+  ignore_errors: "{{ ansible_check_mode }}"
+
+- name: Make AuthorizedPrincipals directory
+  ansible.builtin.file:
+    path: /etc/ssh/auth_principals/
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+    owner: root
+    group: root
+  become: true
+
+- name: Push authorized principle users
+  ansible.builtin.template:
+    src: principals.j2
+    dest: /etc/ssh/auth_principals/{{ principal_group.user }}
+    mode: u=rw,g=r,o=r
+    owner: root
+    group: root
+  become: true
+  loop: "{{ ssh_authorized_principals }}"
+  loop_control:
+    loop_var: "principal_group"
+
+- name: Template revoked keys file
+  ansible.builtin.template:
+    src: revoked_keys.j2
+    dest: /etc/ssh/revoked_keys
+    owner: root
+    group: root
+    mode: u=rw,g=,o=
+  become: true
+  when: ssh_revoked_keys

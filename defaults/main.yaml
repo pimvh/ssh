@@ -1,0 +1,31 @@
+---
+ssh_directory: /etc/ssh
+ssh_config_file: "{{ ssh_directory }}/sshd_config"
+ssh_trusted_user_ca_keys_file: "{{ ssh_directory }}/ssh_trusted_user_ca_keys"
+
+ssh_acceptable_hostkey_crypto:
+  - rsa
+  - ecdsa
+  - ed25519
+
+ssh_copy_trusted_user_cas: true
+ssh_sign_host_certificate: true
+ssh_add_host_certificate_to_known_hosts: true
+
+# ssh config options
+ssh_print_motd: true
+ssh_permit_root_login: false
+
+ssh_host_certificate_validity: ""
+ssh_host_ca_public_key: ""
+ssh_host_ca_private_key: ""
+ssh_host_ca_private_key_pass: ""
+
+ssh_trusted_user_ca_keys: []
+
+ssh_authorized_principals: []
+ssh_host_domain: ""
+
+ssh_revoked_keys: []
+
+ssh_match_directives: []

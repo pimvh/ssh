@@ -1,0 +1,68 @@
+---
+- name: Set cert name of hostkey
+  ansible.builtin.set_fact:
+    _ssh_host_key_cert: "{{ ssh_host_key | split('.') | join('-cert' + '.') }}"
+
+- name: Check if signed hostkey exists
+  ansible.builtin.stat:
+    path: "/etc/ssh/{{ _ssh_host_key_cert }}"
+  register: ssh_remote_host_certificate
+  check_mode: false
+
+- name: Sign host key when it is not signed
+  when: not ssh_remote_host_certificate.stat.exists
+  block:
+    - name: Create and change permission on temporary key directory (clientside)
+      ansible.builtin.tempfile:
+        state: directory
+      check_mode: false
+      changed_when: false
+      register: _tempfile
+      delegate_to: localhost
+
+    - name: Fetch host key file
+      ansible.builtin.fetch:
+        src: "/etc/ssh/{{ ssh_host_key }}"
+        dest: "{{ _tempfile.path }}/{{ ssh_host_key }}"
+        flat: true
+
+    - name: Write SSH host CA private key to disk
+      ansible.builtin.copy:
+        dest: "{{ _tempfile.path }}/host_ca"
+        content: "{{ ssh_host_ca_private_key }}"
+        mode: u=rw,o=,g=
+      no_log: true
+      delegate_to: localhost
+
+    - name: Sign generated SSH host key with private key
+      ansible.builtin.command: >
+        ssh-keygen
+         -I "{{ ssh_host_domain }}"
+         -s {{ _tempfile.path }}/host_ca
+         -h
+         -n "{{ ssh_host_domain }}"
+         -V -5m:+{{ ssh_host_certificate_validity }}
+         -P "{{ ssh_host_ca_private_key_pass }}"
+         {{ _tempfile.path }}/{{ ssh_host_key }}
+      changed_when: true
+      # no_log: true
+      ignore_errors: "{{ ansible_check_mode }}"
+      delegate_to: localhost
+
+    - name: Move signed certificate to host
+      ansible.builtin.copy:
+        src: "{{ _tempfile.path }}/{{ _ssh_host_key_cert }}"
+        dest: "/etc/ssh/{{ _ssh_host_key_cert }}"
+        mode: u=rw,g=r,o=r
+        owner: root
+        group: root
+      become: true
+
+  always:
+    - name: Remove temporary directory (clientside)
+      ansible.builtin.file:
+        name: "{{ _tempfile.path }}"
+        state: absent
+      check_mode: false
+      changed_when: false
+      delegate_to: "localhost"

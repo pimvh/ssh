@@ -1,0 +1,14 @@
+---
+- name: Find all hostkeys
+  ansible.builtin.find:
+    paths: "{{ ssh_directory }}"
+    patterns: "^ssh_host_.*_key-cert.pub$"
+    use_regex: true
+  become: true
+  register: _found_ssh_hostkeys_certs
+
+- name: Gather found hostkeys paths
+  ansible.builtin.set_fact:
+    # iterate over retrieves files, get basename of path
+    _found_ssh_hostkeys_certs: "{{ _found_ssh_hostkeys_certs.files | map(attribute='path')
+      | map('basename') | list }}"

@@ -1,0 +1,26 @@
+---
+
+ssh_copy_trusted_user_cas: true
+ssh_sign_host_certificate: true
+ssh_add_host_certificate_to_known_hosts: false
+
+# ssh config options
+ssh_print_motd: true
+ssh_permit_root_login: false
+
+ssh_host_certificate_validity: "1w"
+ssh_authorized_principals:
+  - user: ansible
+    principals:
+      - testing
+
+ssh_host_ca_public_key: "{{ lookup('ansible.builtin.file', 'test_key.pub') }}"
+ssh_host_ca_private_key: "{{ lookup('ansible.builtin.file', 'test_key') + '\n' }}"
+ssh_host_ca_private_key_pass: "testing"
+
+ssh_trusted_user_ca_keys:
+  - "{{ lookup('ansible.builtin.file', 'test_key.pub') }}"
+
+ssh_host_domain: "Ubuntu"
+
+ssh_revoked_keys: []

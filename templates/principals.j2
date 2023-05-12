@@ -1,0 +1,5 @@
+{{ ansible_managed | comment }}
+
+{% for principle in principal_group.principals %}
+{{ principle }}
+{% endfor %}
