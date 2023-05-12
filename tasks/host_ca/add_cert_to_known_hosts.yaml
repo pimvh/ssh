@@ -1,0 +1,6 @@
+---
+- name: Add the certificate to our known_host file
+  ansible.builtin.known_hosts:
+    path: ~/.ssh/known_hosts
+    name: "{{ ssh_host_domain }}"
+    key: "@cert-authority {{ ssh_host_domain }} {{ ssh_host_ca_public_key }}"

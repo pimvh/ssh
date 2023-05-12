@@ -1,0 +1,23 @@
+---
+- name: Gather host key from system
+  ansible.builtin.include_tasks:
+    file: host_ca/gather_hostkeys.yaml
+
+- name: Sign hostkeys
+  ansible.builtin.include_tasks:
+    file: host_ca/sign_keys.yaml
+  loop: "{{ _found_ssh_hostkeys }}"
+  loop_control:
+    loop_var: "ssh_host_key"
+
+- name: Add the certificate to our known_hosts file
+  ansible.builtin.include_tasks:
+    file: host_ca/add_cert_to_known_hosts.yaml
+    apply:
+      delegate_to: localhost
+      run_once: true
+  when: ssh_add_host_certificate_to_known_hosts
+
+- name: Gather found certificates
+  ansible.builtin.include_tasks:
+    file: host_ca/gather_host_certificates.yaml

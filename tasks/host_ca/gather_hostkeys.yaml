@@ -1,0 +1,19 @@
+---
+- name: Find all hostkeys
+  ansible.builtin.find:
+    paths: /etc/ssh/
+    patterns: "^ssh_host_({{ ssh_acceptable_hostkey_crypto | join('|') }})_key.pub$"
+    use_regex: true
+  become: true
+  register: _found_ssh_hostkeys
+
+- name: Gather found hostkeys paths
+  ansible.builtin.set_fact:
+    # iterate over retrieves files, get basename of path
+    _found_ssh_hostkeys: "{{ _found_ssh_hostkeys.files | map(attribute='path') | map('basename')
+      | list }}"
+
+- name: Error if no found hostkeys paths
+  ansible.builtin.fail:
+    msg: No SSH hostkeys were found, cannot continue
+  when: not _found_ssh_hostkeys

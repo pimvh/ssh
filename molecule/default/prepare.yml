@@ -1,0 +1,23 @@
+---
+- name: Prepare
+  hosts: all
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Install required package for ssh, openssh-server and rsyslog
+      ansible.builtin.package:
+        name:
+          - openssh-server
+          - rsyslog
+        state: present
+
+    - name: Start ssh and rsyslog service
+      ansible.builtin.systemd:
+        name: "{{ item }}"
+        state: started
+      loop:
+        - ssh
+        - rsyslog

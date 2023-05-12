@@ -1,0 +1,5 @@
+{{ ansible_managed | comment }}
+
+{% for ssh_user_ca in ssh_trusted_user_ca_keys %}
+{{ ssh_user_ca }}
+{% endfor -%}

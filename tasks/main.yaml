@@ -1,0 +1,45 @@
+---
+- name: Assert required variables for role are defined
+  ansible.builtin.include_tasks:
+    file: assert.yaml
+    apply:
+      delegate_to: localhost
+      run_once: true
+      tags:
+        - user_ca
+        - host_ca
+  tags:
+    - user_ca
+    - host_ca
+
+- name: Configure User SSH CA
+  ansible.builtin.include_tasks:
+    file: user_cas/configure.yaml
+    apply:
+      tags:
+        - user_ca
+  tags:
+    - user_ca
+
+- name: Configure Host SSH CA
+  ansible.builtin.include_tasks:
+    file: host_ca/configure.yaml
+    apply:
+      tags:
+        - host_ca
+  tags:
+    - host_ca
+
+- name: Template sshd config
+  ansible.builtin.template:
+    src: "sshd_config.j2"
+    dest: "/etc/ssh/sshd_config"
+    owner: root
+    group: root
+    mode: u=rw,g=,o=
+    validate: /usr/sbin/sshd -T -f %s
+  become: true
+  notify: restart ssh
+  tags:
+    - user_ca
+    - host_ca

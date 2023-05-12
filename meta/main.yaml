@@ -1,0 +1,159 @@
+---
+galaxy_info:
+  author: Pim van Helvoirt
+  description: "role to configure SSH"
+
+  license: GPL-3.0-only
+
+  min_ansible_version: "2.14"
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - jammy
+    - name: Debian
+      versions:
+        - bullseye
+
+  galaxy_tags:
+    - ssh
+    - certificates
+    - match
+
+dependencies: []
+
+argument_specs:
+  ssh_directory:
+    type: string
+    required: false
+    default: /etc/ssh/
+    description: Path to ssh directory
+  ssh_config_file:
+    type: string
+    required: false
+    default: /etc/ssh/sshd_config
+    description: Path to ssh configuration file
+  ssh_trusted_user_ca_keys_file:
+    type: string
+    required: false
+    default: /etc/ssh/ssh_trusted_user_ca_keys
+    description: Path to trusted user_ca_keys
+  ssh_copy_trusted_user_cas:
+    type: bool
+    required: false
+    default: true
+    description: boolean on whether to copy the trusted user CAs to the remote system
+  ssh_sign_host_certificate:
+    type: bool
+    required: false
+    default: true
+    description: boolean on whether to sign the host certificate of the remote host
+
+  ssh_acceptable_hostkey_crypto:
+    type: list
+    elements: string
+    required: false
+    default:
+      - rsa
+      - ecdsa
+      - ed25519
+    description: determines which keys to sign, e.g. which crypto is acceptable
+  ssh_add_host_certificate_to_known_hosts:
+    type: bool
+    required: false
+    default: true
+    description: boolean on whether to add the host certificate to the known hosts of the ansible controller for convenience
+  ssh_print_motd:
+    type: bool
+    required: false
+    default: true
+    description: boolean on whether to print the motd when logging in over SSH
+  ssh_permit_root_login:
+    type: bool
+    required: false
+    default: false
+    description: boolean on whether to premit the login of root over SSH
+  ssh_host_key_name:
+    type: string
+    required: false
+    default: ""
+    description: the name of the SSH host key
+  ssh_host_certificate_validity:
+    type: string
+    required: false
+    default: ""
+    description: the validity of the SSH host certificate
+  ssh_host_ca_public_key:
+    type: string
+    required: false
+    default: []
+    description: the public key of host CA
+  ssh_host_ca_private_key:
+    type: string
+    required: false
+    default: []
+    description: the private key of host CA
+  ssh_host_ca_private_key_pass:
+    type: string
+    required: false
+    default: []
+    description: the passphrase of the private key of host CA
+
+  ssh_trusted_user_ca_keys:
+    type: list
+    elements: string
+    required: false
+    default: []
+    description: the list of trusted user certificates
+
+  ssh_authorized_principals:
+    type: list
+    elements: dict
+    required: false
+    default: []
+    description: the list of principals that map to usernames
+    options:
+      user:
+        type: string
+        required: true
+        description: name of the user to which this principals apply
+      principals:
+        type: list
+        elements: string
+        required: true
+        description: name of the principals which apply to the user
+
+  ssh_revoked_keys:
+    type: list
+    elements: string
+    required: false
+    default: []
+    description: list of revoked ssh certificates
+
+  ssh_match_directives:
+    type: list
+    elements: dict
+    required: false
+    default: []
+    description: object that represent additional match based configuration for SSH
+    options:
+      note:
+        type: string
+        required: true
+        description: note to attach to this match directive
+      rule:
+        type: string
+        required: true
+        description: directive to match on (see man sshd_config for examples)
+      results:
+        type: list
+        elements: string
+        required: true
+        description: result of the directive being match, rules that are applied (see man sshd_config)
+
+  # can probably also be derived from the host itself
+  ssh_host_domain:
+    type: str
+    required: true
+    default: ""
+    description: the domain of the host that will be used when signing the key

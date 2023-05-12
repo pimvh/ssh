@@ -1,5 +1,5 @@
-# terraform managed
 ---
+# terraform managed
 - name: Converge
   hosts: all
   gather_facts: true
