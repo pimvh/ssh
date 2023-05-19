@@ -36,7 +36,7 @@ ssh_permit_root_login: false
 ssh_host_certificate_validity: "" # 2w for 2 weeks
 # lookups work well for keys, like "{{ lookup('ansible.builtin.file', '....pub') }} }}" or lookup('ansible.builtin.vars', '....') }}
 # but it depends on your usage
-# take care that your resulting key is formatted correctly (e.g. it has a trailing newline)
+# take care that your resulting key is formatted correctly (e.g. it has a trailing newline) (consider using rstrip=false, within the lookup plugin)
 ssh_host_ca_public_key: ""
 ssh_host_ca_private_key: ""
 ssh_host_ca_private_key_pass: ""

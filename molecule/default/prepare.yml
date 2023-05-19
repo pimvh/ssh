@@ -6,6 +6,7 @@
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
+      become: true
 
     - name: Install required package for ssh, openssh-server and rsyslog
       ansible.builtin.package:
@@ -13,6 +14,7 @@
           - openssh-server
           - rsyslog
         state: present
+      become: true
 
     - name: Start ssh and rsyslog service
       ansible.builtin.systemd:
@@ -21,3 +23,4 @@
       loop:
         - ssh
         - rsyslog
+      become: true
