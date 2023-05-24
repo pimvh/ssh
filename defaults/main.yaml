@@ -21,6 +21,10 @@ ssh_host_ca_public_key: ""
 ssh_host_ca_private_key: ""
 ssh_host_ca_private_key_pass: ""
 
+ssh_enable_validity_check: false
+ssh_script_folder: /usr/local/bin/
+ssh_admin_mail: ""
+
 ssh_trusted_user_ca_keys: []
 
 ssh_authorized_principals: []

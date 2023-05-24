@@ -5,3 +5,18 @@
     state: reloaded
   become: true
   listen: restart ssh
+
+- name: Just force systemd to reread configs (2.4 and above)
+  ansible.builtin.systemd:
+    daemon_reload: true
+  become: true
+  listen: "reload systemd"
+
+- name: Enable validate_hostkeys timer
+  ansible.builtin.systemd:
+    name: validate_hostkeys.timer
+    state: started
+    enabled: true
+  become: true
+  listen: "enable validate_hostkeys timer"
+  ignore_errors: "{{ ansible_check_mode }}"

@@ -1,0 +1,11 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Run check of the validity of SSH hostkeys on timer
+Wants=validate_hostkeys.timer
+
+[Service]
+ExecStart={{ ssh_script_folder }}validate_hostkeys
+
+[Install]
+WantedBy=multi-user.target

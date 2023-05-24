@@ -1,0 +1,48 @@
+---
+- name: Move validate_hostkeys script
+  ansible.builtin.template:
+    src: validate_hostkeys.j2
+    dest: "{{ ssh_script_folder }}validate_hostkeys"
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=r
+  become: true
+
+- name: Move validate_hostkeys service and validate
+  block:
+    - name: Move validate_hostkeys systemd timer file to host
+      ansible.builtin.template:
+        src: validate_hostkeys.timer.j2
+        dest: "/etc/systemd/system/validate_hostkeys.timer"
+        # validate: "systemd-analyze verify %s"
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      become: true
+      notify:
+        - reload systemd
+
+    - name: Move validate_hostkeys
+      ansible.builtin.template:
+        src: validate_hostkeys.service.j2
+        dest: /etc/systemd/system/validate_hostkeys.service
+        # does not work using Ansible
+        # validate: "systemd-analyze verify %s"
+        owner: root
+        group: root
+        mode: u=rw,g=r,o=r
+      become: true
+      notify:
+        - reload systemd
+        - enable validate_hostkeys timer
+
+
+    - name: Validate validate_hostkeys service
+      # validation as separate task
+      ansible.builtin.command: systemd-analyze verify validate_hostkeys.{{ item }}
+      changed_when: false
+      become: true
+      loop:
+        - timer
+        - service
+      ignore_errors: "{{ ansible_check_mode }}"

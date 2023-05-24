@@ -49,6 +49,24 @@ argument_specs:
     default: true
     description: boolean on whether to sign the host certificate of the remote host
 
+  ssh_enable_validity_check:
+    type: bool
+    default: false
+    description: boolean on whether to enable a service that check the validity of host certificates
+
+
+  ssh_admin_mail:
+    type: string
+    required: false
+    default: ""
+    description: optional ssh admin mail to which validity of ssh host keys is sent
+
+  ssh_script_folder:
+    type: string
+    required: false
+    default: /usr/local/bin/
+    description: Path to where script for SSH are stored
+
   ssh_acceptable_hostkey_crypto:
     type: list
     elements: string
