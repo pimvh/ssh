@@ -24,6 +24,6 @@ ssh_trusted_user_ca_keys:
 ssh_host_domain: "Ubuntu"
 
 ssh_enable_validity_check: true
-ssh_admin_mail: "foo@example.com"
+ssh_admin_email: "foo@example.com"
 
 ssh_revoked_keys: []

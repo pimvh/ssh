@@ -43,7 +43,7 @@ ssh_host_ca_private_key_pass: ""
 
 ssh_enable_validity_check: false # this role has an optional systemd service that can check the validity of hostkeys
 ssh_script_folder: /usr/local/bin/
-ssh_admin_mail: ""
+ssh_admin_email: ""
 
 ssh_trusted_user_ca_keys: []
 # - "key1"

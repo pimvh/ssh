@@ -54,8 +54,7 @@ argument_specs:
     default: false
     description: boolean on whether to enable a service that check the validity of host certificates
 
-
-  ssh_admin_mail:
+  ssh_admin_email:
     type: string
     required: false
     default: ""
