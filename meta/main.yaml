@@ -173,9 +173,7 @@ argument_specs:
             required: true
             description: result of the directive being match, rules that are applied (see man sshd_config)
 
-      # can probably also be derived from the host itself
       ssh_host_domain:
         type: str
         required: true
-        default: ""
         description: the domain of the host that will be used when signing the key
