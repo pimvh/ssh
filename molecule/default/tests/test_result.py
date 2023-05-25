@@ -23,10 +23,12 @@ def test_ssh_certs_created(host):
 def test_valid_validity_hostkey(host):
     """test that the validate_hostkeys timer is running"""
 
-    assert host.service("validate_hostkeys").is_valid
+    with host.sudo():
+        assert host.service("validate_hostkeys").is_valid
 
 
 def test_validity_hostkey(host):
     """test that the validate_hostkeys timer is running"""
 
-    assert host.service("validate_hostkeys.timer").is_running
+    with host.sudo():
+        assert host.service("validate_hostkeys.timer").is_running
