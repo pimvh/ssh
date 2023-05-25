@@ -1,0 +1,65 @@
+#!/bin/zsh
+
+{{ ansible_managed | comment }}
+
+SSH_CONFIG_DIR={{ ssh_directory }}
+
+set -Eeuo pipefail
+
+check_requirements() {
+    if ! command -v ssh-keygen &>/dev/null; then
+        echo "ssh-keygen is required."
+        exit 1
+    fi
+
+    if [ ! -d $SSH_CONFIG_DIR ]; then
+        echo "Directory $SSH_CONFIG_DIR DOES NOT exists."
+        exit 1
+    fi
+}
+
+check_requirements
+
+cd $SSH_CONFIG_DIR
+
+echo "finding hostkeys..."
+ssh_host_keys=($(find . -type f | grep -E 'ssh_host_(rsa|ecdsa|ed25519)_key-cert\.pub'))
+
+echo "looping over hostkeys..."
+for ssh_host_key in "${ssh_host_keys[@]}"; do
+
+  echo "found key $ssh_host_key"
+
+  # Parses string like this
+  # Valid: from 2023-03-11T19:57:17 to 2024-03-09T20:02:17
+  # into --> 2024-03-09T20:02:17
+
+  expiry_date=$(/usr/bin/ssh-keygen -L -f "$ssh_host_key" | grep "Valid" | sed 's/^\s\+Valid: from .* to \([0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\}T[0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\}\)$/\1/')
+
+  expiry_ts=$(/usr/bin/date --date="$expiry_date" +%s)
+  in_three_weeks=$(/usr/bin/date --date='now + 3 weeks' +%s)
+
+  if [ $in_three_weeks -ge $expiry_ts ];
+  then
+
+    string=$(cat << EOF
+Hello Administrator,
+
+The signature on the hostkey $ssh_host_key will expire at $expiry_date, which is within 3 weeks or is already expired.
+
+Kind regards,
+
+Your system
+
+EOF
+
+)
+
+    echo $string | mail -s "Key Expiration: $ssh_host_key" {{ ssh_admin_email }}
+  else
+    echo "host key is still valid, continuing..."
+  fi
+
+done
+
+echo "finished traversing all keys..."

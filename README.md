@@ -41,6 +41,10 @@ ssh_host_ca_public_key: ""
 ssh_host_ca_private_key: ""
 ssh_host_ca_private_key_pass: ""
 
+ssh_enable_validity_check: false # this role has an optional systemd service that can check the validity of hostkeys
+ssh_script_folder: /usr/local/bin/
+ssh_admin_email: ""
+
 ssh_trusted_user_ca_keys: []
 # - "key1"
 # - "key2"
@@ -94,6 +98,7 @@ roles:
   - move the trusted user Certificate public key to the host
   - make the authorized principle directory, and create mapping from principals to users
   - add revoked keys
+- optionally push a service that check the validity of hostkeys every week, and email when it is about to expire.
 - template the sshd configuration file
 
 # Future Improvements

@@ -21,3 +21,8 @@
 - name: Gather found certificates
   ansible.builtin.include_tasks:
     file: host_ca/gather_host_certificates.yaml
+
+- name: Move optional check_validity_hostkeys service and script
+  ansible.builtin.include_tasks:
+    file: host_ca/validity_check.yaml
+  when: ssh_enable_validity_check

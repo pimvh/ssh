@@ -1,0 +1,13 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Timer for the validition of SSH hostkeys
+Requires=validate_hostkeys.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Timer]
+Unit=validate_hostkeys.service
+OnCalendar=weekly
+Persistent=true

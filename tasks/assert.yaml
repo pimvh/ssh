@@ -2,7 +2,7 @@
 - name: Verify that required host_certificate related variable are defined
   ansible.builtin.assert:
     that:
-      - "{{ item }}  is defined"
+      - "{{ item }} is defined"
       - "{{ item }} | length > 0"
       - "{{ item }} != None"
     fail_msg: "{{ item }} needs to be set for the role to work"
@@ -20,7 +20,7 @@
 - name: Verify that required lists variables are defined
   ansible.builtin.assert:
     that:
-      - "{{ item }}  is defined"
+      - "{{ item }} is defined"
       - "{{ item }} | length > 0"
       - "{{ item }} != None"
     fail_msg: "{{ item }} needs to be set for the role to work"
@@ -31,3 +31,18 @@
   loop:
     - ssh_trusted_user_ca_keys
   when: ssh_copy_trusted_user_cas is sameas true
+
+- name: Verify that an ssh_admin_email is defined when the validity check is present
+  ansible.builtin.assert:
+    that:
+      - "{{ item }} is defined"
+      - "{{ item }} | length > 0"
+      - "{{ item }} != None"
+    fail_msg: "{{ item }} needs to be set for the role to work"
+    success_msg: "Required variable {{ item }} is defined"
+  changed_when: false
+  diff: false
+  no_log: true
+  loop:
+    - ssh_admin_email
+  when: ssh_enable_validity_check is sameas true
