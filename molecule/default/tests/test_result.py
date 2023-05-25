@@ -20,13 +20,6 @@ def test_ssh_certs_created(host):
         assert host.file(f"/etc/ssh/ssh_host_{crypto}_key-cert.pub")
 
 
-def test_valid_validity_hostkey(host):
-    """test that the validate_hostkeys timer is running"""
-
-    with host.sudo():
-        assert host.service("validate_hostkeys").is_valid
-
-
 def test_validity_hostkey(host):
     """test that the validate_hostkeys timer is running"""
 
