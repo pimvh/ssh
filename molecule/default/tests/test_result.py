@@ -24,7 +24,7 @@ def test_auth_principals_created(host):
     """test that the auth principals are added correctly"""
 
     with host.sudo():
-        assert host.file("/etc/ssh/auth_principals/ansible").is_present
+        assert host.file("/etc/ssh/auth_principals/ansible")
         assert host.file("/etc/ssh/auth_principals/ansible").contains("testing")
 
 
