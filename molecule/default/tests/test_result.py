@@ -32,7 +32,7 @@ def test_validate_hostkeys_script_exists(host):
     """test that the validate_hostkeys script is present"""
 
     with host.sudo():
-        assert host.file("/usr/local/bin/validate_hostkeys").is_present
+        assert host.file("/usr/local/bin/validate_hostkeys")
 
 
 def test_validate_hostkey_timer_runner(host):
