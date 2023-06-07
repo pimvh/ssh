@@ -1,6 +1,6 @@
 ---
 ssh_directory: /etc/ssh
-ssh_config_file: "{{ ssh_directory }}/ssh_config.d/10-sshd_config"
+ssh_config_file: "{{ ssh_directory }}/sshd_config.d/10-sshd_config.conf"
 ssh_trusted_user_ca_keys_file: "{{ ssh_directory }}/ssh_trusted_user_ca_keys"
 
 ssh_acceptable_hostkey_crypto:

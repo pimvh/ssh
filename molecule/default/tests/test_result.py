@@ -35,6 +35,20 @@ def test_sshd_config_file_created(host):
         assert host.file("/etc/ssh/ssh_config.d/10-sshd_config")
 
 
+def test_no_password_auth(host):
+    """test that password authentication is disabled"""
+
+    with host.sudo():
+        assert host.run("sshd -T | grep 'passwordauthentication no' ").rc == 0
+
+
+def test_no_root_login_auth(host):
+    """test that root login is disabled"""
+
+    with host.sudo():
+        assert host.run("sshd -T | grep 'permitrootlogin no' ").rc == 0
+
+
 def test_validate_hostkeys_script_exists(host):
     """test that the validate_hostkeys script is present"""
 
