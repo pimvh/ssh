@@ -36,7 +36,7 @@ argument_specs:
       ssh_config_file:
         type: str
         required: false
-        default: /etc/ssh/sshd_config
+        default: "/etc/ssh/sshd_config.d/10-sshd_config.conf"
         description: Path to ssh configuration file
       ssh_trusted_user_ca_keys_file:
         type: str

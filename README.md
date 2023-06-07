@@ -17,8 +17,8 @@ A description of what the variables entails is included in the argument specific
 ```
 ---
 ssh_directory: /etc/ssh
-ssh_config_file: "{{ ssh_directory }}/sshd_config"
-ssh_trusted_user_ca_keys_file: "{{ ssh_directory }}/ssh_trusted_user_ca_keys"
+# use debian style of directory, ssh directives are loaded in first-come-first-serve order, and thus we can enforce config the best this way
+ssh_config_file: "{{ ssh_directory }}/sshd_config.d/10-sshd_config.conf" ssh_trusted_user_ca_keys_file: "{{ ssh_directory }}/ssh_trusted_user_ca_keys"
 
 ssh_acceptable_hostkey_crypto:
   - rsa
