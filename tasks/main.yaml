@@ -33,7 +33,7 @@
 - name: Template sshd config
   ansible.builtin.template:
     src: "sshd_config.j2"
-    dest: "/etc/ssh/sshd_config"
+    dest: "{{ ssh_config_file }}"
     owner: root
     group: root
     mode: u=rw,g=,o=

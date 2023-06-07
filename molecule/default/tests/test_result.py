@@ -28,6 +28,13 @@ def test_auth_principals_created(host):
         assert host.file("/etc/ssh/auth_principals/ansible").contains("testing")
 
 
+def test_sshd_config_file_created(host):
+    """test that the sshd_config_file is generated in the correct spot"""
+
+    with host.sudo():
+        assert host.file("/etc/ssh/ssh_config.d/10-sshd_config")
+
+
 def test_validate_hostkeys_script_exists(host):
     """test that the validate_hostkeys script is present"""
 
